@@ -1,1 +1,12 @@
 <mat-toolbar color="primary">My App</mat-toolbar>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <input matInput formControlName="first" placeholder="First name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput formControlName="last" placeholder="Last name">
+  </mat-form-field>
+
+  <button type="submit" [disabled]="!form.valid">Submit</button>
+</form>
