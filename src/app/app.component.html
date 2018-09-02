@@ -2,11 +2,18 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <mat-form-field>
-    <input matInput formControlName="first" placeholder="First name">
+    <input matInput formControlName="first" placeholder="First name" required>
   </mat-form-field>
+  <br>
   <mat-form-field>
-    <input matInput formControlName="last" placeholder="Last name">
+    <input matInput formControlName="last" placeholder="Last name" required>
   </mat-form-field>
-
-  <button type="submit" [disabled]="!form.valid">Submit</button>
+  <br>
+  <mat-form-field>
+    <my-tel-input formControlName="tel" placeholder="Phone number" required></my-tel-input>
+    <mat-icon matSuffix>phone</mat-icon>
+    <mat-hint>Include area code</mat-hint>
+  </mat-form-field>
+  <br>
+  <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
 </form>
