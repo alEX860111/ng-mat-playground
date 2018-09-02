@@ -31,10 +31,14 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy, Contro
   parts: FormGroup;
   stateChanges = new Subject<void>();
   focused = false;
-  errorState = false;
   controlType = 'my-tel-input';
   id = `my-tel-input-${MyTelInput.nextId++}`;
   describedBy = '';
+
+  get errorState() {
+    const { value: { area, exchange, subscriber } } = this.parts;
+    return area.length !== 3 || exchange.length !== 3 || subscriber.length !== 4;
+  }
 
   get empty() {
     const { value: { area, exchange, subscriber } } = this.parts;
@@ -128,12 +132,12 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy, Contro
     }
   }
 
-  registerOnChange(fn: (_: any) => void): void {
+  registerOnChange(fn: (myTel: MyTel) => void): void {
     console.log('registerOnChange');
     this._onChange = fn;
   }
 
-  _onChange = (_: any) => {};
+  _onChange = (_: MyTel) => {};
 
   registerOnTouched(fn: any): void {
     console.log('registerOnTouched');
