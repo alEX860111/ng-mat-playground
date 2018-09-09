@@ -1,5 +1,6 @@
 div {
   display: flex;
+  justify-content: flex-end;
 }
 
 input {
@@ -18,4 +19,8 @@ span {
 
 :host.floating span {
   opacity: 1;
+}
+
+.integerPart {
+  text-align: right;
 }

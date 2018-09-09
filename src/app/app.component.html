@@ -10,9 +10,9 @@
   </mat-form-field>
   <br>
   <mat-form-field>
-    <my-tel-input formControlName="tel" placeholder="Phone number" required></my-tel-input>
-    <mat-icon matSuffix>phone</mat-icon>
-    <mat-hint>Include area code</mat-hint>
+    <money-amount-input formControlName="rent" placeholder="Rent" required></money-amount-input>
+    <span matSuffix>€</span>
+    <mat-hint>Your monthly rent</mat-hint>
   </mat-form-field>
   <br>
   <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>

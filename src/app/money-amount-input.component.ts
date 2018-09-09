@@ -1,23 +1,23 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ElementRef, Input, OnDestroy, Optional, Self, forwardRef } from '@angular/core';
-import { FormBuilder, FormGroup, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, ElementRef, Input, OnDestroy, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NgControl, Validators } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material';
 import { Subject } from 'rxjs';
 
 /** Data structure for holding telephone number. */
-export class MyTel {
-  constructor(public area: string, public exchange: string, public subscriber: string) { }
+export class MoneyAmount {
+  constructor(public integerPart: string, public fractionalPart: string) { }
 }
 
 
 /** Custom `MatFormFieldControl` for telephone number input. */
 @Component({
-  selector: 'my-tel-input',
-  templateUrl: 'form-field-custom-control-example.html',
-  styleUrls: ['form-field-custom-control-example.css'],
+  selector: 'money-amount-input',
+  templateUrl: 'money-amount-input.component.html',
+  styleUrls: ['money-amount-input.component.css'],
   providers: [
-    { provide: MatFormFieldControl, useExisting: MyTelInput }
+    { provide: MatFormFieldControl, useExisting: MoneyAmountInput }
   ],
   host: {
     '[class.floating]': 'shouldLabelFloat',
@@ -25,25 +25,23 @@ export class MyTel {
     '[attr.aria-describedby]': 'describedBy',
   }
 })
-export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy, ControlValueAccessor {
+export class MoneyAmountInput implements MatFormFieldControl<MoneyAmount>, OnDestroy, ControlValueAccessor {
   static nextId = 0;
 
   parts: FormGroup;
   stateChanges = new Subject<void>();
   focused = false;
-  controlType = 'my-tel-input';
-  id = `my-tel-input-${MyTelInput.nextId++}`;
+  controlType = 'money-amount-input';
+  id = `money-amount-input-${MoneyAmountInput.nextId++}`;
   describedBy = '';
 
   get errorState() {
-    const { value: { area, exchange, subscriber } } = this.parts;
-    return area.length !== 3 || exchange.length !== 3 || subscriber.length !== 4;
+    return !this.parts.valid && this.parts.touched;
   }
 
   get empty() {
-    const { value: { area, exchange, subscriber } } = this.parts;
-
-    return !area && !exchange && !subscriber;
+    const { value: { integerPart, fractionalPart } } = this.parts;
+    return !integerPart && !fractionalPart;
   }
 
   get shouldLabelFloat() { return this.focused || !this.empty; }
@@ -73,29 +71,41 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy, Contro
   private _disabled = false;
 
   @Input()
-  get value(): MyTel | null {
+  get value(): MoneyAmount | null {
     console.log('get value');
-    const { value: { area, exchange, subscriber } } = this.parts;
-    if (area.length === 3 && exchange.length === 3 && subscriber.length === 4) {
-      return new MyTel(area, exchange, subscriber);
+    if (this.parts.valid) {
+      const { value: { integerPart, fractionalPart } } = this.parts;
+      return new MoneyAmount(integerPart, fractionalPart);
     }
     return null;
   }
-  set value(tel: MyTel | null) {
+  set value(tel: MoneyAmount | null) {
     console.log('set value', tel);
-    const { area, exchange, subscriber } = tel || new MyTel('', '', '');
-    this.parts.setValue({ area, exchange, subscriber });
+    if (tel !== null) {
+      this.parts.setValue({ integerPart: tel.integerPart, fractionalPart: tel.fractionalPart });
+
+    } else {
+      this.parts.setValue({ integerPart: null, fractionalPart: '99' });
+
+    }
+    //const { integerPart, fractionalPart } = tel || new MoneyAmount('', '');
+    //this.parts.setValue({ integerPart, fractionalPart });
     this.stateChanges.next();
 
     this._onChange(tel);
   }
 
   constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>, @Optional() @Self() public ngControl: NgControl) {
-    this.parts = fb.group({
-      area: '',
-      exchange: '',
-      subscriber: '',
+    const integerPartControl = new FormControl(null, [Validators.pattern(/^\d+$/), Validators.required]);
+    const fractionalPartControl = new FormControl('00', [Validators.pattern(/^\d{1,2}$/), Validators.required]);
+    this.parts = new FormGroup({
+      integerPart: integerPartControl,
+      fractionalPart: fractionalPartControl
     });
+    // this.parts = fb.group({
+    //   integerPart: 1,
+    //   fractionalPart: ''
+    // });
 
     this.parts.valueChanges.subscribe(() => {
       this._onChange(this.value);
@@ -124,26 +134,24 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, OnDestroy, Contro
     }
   }
 
-  writeValue(value: any): void {
+  writeValue(value: MoneyAmount): void {
     console.log('writeValue', value);
-    if (value instanceof MyTel) {
-      const myTel: MyTel = value;
+    if (value instanceof MoneyAmount) {
+      const myTel: MoneyAmount = value;
       this.value = myTel;
     }
   }
 
-  registerOnChange(fn: (myTel: MyTel) => void): void {
+  registerOnChange(fn: (myTel: MoneyAmount) => void): void {
     console.log('registerOnChange');
     this._onChange = fn;
   }
-
-  _onChange = (_: MyTel) => {};
+  _onChange = (_: MoneyAmount) => { };
 
   registerOnTouched(fn: any): void {
     console.log('registerOnTouched');
     this._onTouched = fn;
   }
-
-  _onTouched = () => {};
+  _onTouched = () => { };
 
 }
