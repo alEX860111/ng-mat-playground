@@ -5,13 +5,6 @@ import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NgControl, V
 import { MatFormFieldControl } from '@angular/material';
 import { Subject } from 'rxjs';
 
-/** Data structure for holding telephone number. */
-export class MoneyAmount {
-  constructor(public integerPart: string, public fractionalPart: string) { }
-}
-
-
-/** Custom `MatFormFieldControl` for telephone number input. */
 @Component({
   selector: 'money-amount-input',
   templateUrl: 'money-amount-input.component.html',
@@ -25,8 +18,12 @@ export class MoneyAmount {
     '[attr.aria-describedby]': 'describedBy',
   }
 })
-export class MoneyAmountInput implements MatFormFieldControl<MoneyAmount>, OnDestroy, ControlValueAccessor {
+export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy, ControlValueAccessor {
   static nextId = 0;
+
+  private static readonly DEFAULT_INTEGER_PART = null;
+
+  private static readonly DEFAULT_FRACTIONALPART = '00';
 
   parts: FormGroup;
   stateChanges = new Subject<void>();
@@ -71,41 +68,35 @@ export class MoneyAmountInput implements MatFormFieldControl<MoneyAmount>, OnDes
   private _disabled = false;
 
   @Input()
-  get value(): MoneyAmount | null {
+  get value(): number | null {
     console.log('get value');
     if (this.parts.valid) {
       const { value: { integerPart, fractionalPart } } = this.parts;
-      return new MoneyAmount(integerPart, fractionalPart);
+      return Number(`${integerPart}.${fractionalPart}`);
     }
     return null;
   }
-  set value(tel: MoneyAmount | null) {
-    console.log('set value', tel);
-    if (tel !== null) {
-      this.parts.setValue({ integerPart: tel.integerPart, fractionalPart: tel.fractionalPart });
+  set value(amount: number | null) {
+    console.log('set value', amount);
+    if (amount !== null) {
+      const split = String(amount).split('.')
+      this.parts.setValue({ integerPart: split[0], fractionalPart: split[1] });
 
     } else {
-      this.parts.setValue({ integerPart: null, fractionalPart: '99' });
+      this.parts.setValue({ integerPart: MoneyAmountInput.DEFAULT_INTEGER_PART, fractionalPart: MoneyAmountInput.DEFAULT_FRACTIONALPART });
 
     }
-    //const { integerPart, fractionalPart } = tel || new MoneyAmount('', '');
-    //this.parts.setValue({ integerPart, fractionalPart });
     this.stateChanges.next();
-
-    this._onChange(tel);
+    this._onChange(amount);
   }
 
   constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>, @Optional() @Self() public ngControl: NgControl) {
-    const integerPartControl = new FormControl(null, [Validators.pattern(/^\d+$/), Validators.required]);
-    const fractionalPartControl = new FormControl('00', [Validators.pattern(/^\d{1,2}$/), Validators.required]);
+    const integerPartControl = new FormControl(MoneyAmountInput.DEFAULT_INTEGER_PART, [Validators.pattern(/^\d+$/), Validators.required]);
+    const fractionalPartControl = new FormControl(MoneyAmountInput.DEFAULT_FRACTIONALPART, [Validators.pattern(/^\d{1,2}$/), Validators.required]);
     this.parts = new FormGroup({
       integerPart: integerPartControl,
       fractionalPart: fractionalPartControl
     });
-    // this.parts = fb.group({
-    //   integerPart: 1,
-    //   fractionalPart: ''
-    // });
 
     this.parts.valueChanges.subscribe(() => {
       this._onChange(this.value);
@@ -134,22 +125,16 @@ export class MoneyAmountInput implements MatFormFieldControl<MoneyAmount>, OnDes
     }
   }
 
-  writeValue(value: MoneyAmount): void {
-    console.log('writeValue', value);
-    if (value instanceof MoneyAmount) {
-      const myTel: MoneyAmount = value;
-      this.value = myTel;
-    }
+  writeValue(value: number): void {
+    this.value = value;
   }
 
-  registerOnChange(fn: (myTel: MoneyAmount) => void): void {
-    console.log('registerOnChange');
+  registerOnChange(fn: (amount: number) => void): void {
     this._onChange = fn;
   }
-  _onChange = (_: MoneyAmount) => { };
+  _onChange = (_: number) => { };
 
   registerOnTouched(fn: any): void {
-    console.log('registerOnTouched');
     this._onTouched = fn;
   }
   _onTouched = () => { };
