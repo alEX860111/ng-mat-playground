@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MoneyAmount } from './money-amount-input.component';
 
 @Component({
   selector: 'app-root',
