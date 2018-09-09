@@ -7,10 +7,11 @@ import { MatToolbarModule, MatFormFieldModule, MatInputModule, MatButtonModule, 
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MoneyAmountInput } from './money-amount-input.component';
+import { OnlyNumber } from './only-number';
 
 @NgModule({
   declarations: [
-    AppComponent, MoneyAmountInput
+    AppComponent, MoneyAmountInput, OnlyNumber
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule, MatIconModule, MatToolbarModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule

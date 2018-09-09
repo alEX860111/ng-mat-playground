@@ -1,5 +1,5 @@
 <div [formGroup]="parts">
-  <input class="integerPart" formControlName="integerPart">
+  <input OnlyNumber="true" class="integerPart" formControlName="integerPart">
   <span>&#44;</span>
   <input formControlName="fractionalPart" size="2" maxlength="2">
 </div>
