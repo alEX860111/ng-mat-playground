@@ -69,7 +69,6 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
 
   @Input()
   get value(): number | null {
-    console.log('get value');
     if (this.parts.valid) {
       const { value: { integerPart, fractionalPart } } = this.parts;
       return Number(`${integerPart}.${fractionalPart}`);
@@ -77,7 +76,6 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
     return null;
   }
   set value(amount: number | null) {
-    console.log('set value', amount);
     if (amount !== null) {
       const split = String(amount).split('.')
       this.parts.setValue({ integerPart: split[0], fractionalPart: split[1] });
@@ -90,7 +88,7 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
     this._onChange(amount);
   }
 
-  constructor(fb: FormBuilder, private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>, @Optional() @Self() public ngControl: NgControl) {
+  constructor(private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>, @Optional() @Self() public ngControl: NgControl) {
     const integerPartControl = new FormControl(MoneyAmountInput.DEFAULT_INTEGER_PART, [Validators.pattern(/^\d+$/), Validators.required]);
     const fractionalPartControl = new FormControl(MoneyAmountInput.DEFAULT_FRACTIONALPART, [Validators.pattern(/^\d{1,2}$/), Validators.required]);
     this.parts = new FormGroup({
