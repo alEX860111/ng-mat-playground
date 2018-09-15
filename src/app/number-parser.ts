@@ -8,13 +8,7 @@ export class NumberParser {
       return null;
     }
 
-    value = value.replace(/[^\,\d]/g, '');
-    var nth = 0;
-    value = value.replace(/,/g, match => {
-      nth++;
-      return (nth === 1) ? match : '';
-    });
-    value = value.replace(/\,/g, '.');
+    value = this.sanitize(value);
 
     if (value.endsWith('.') || value.endsWith('.0')) {
       return null;
@@ -29,6 +23,18 @@ export class NumberParser {
     }
 
     return null;
+  }
+
+  private sanitize(value: string): string {
+    value = value.replace(/[^\,\d]/g, '');
+
+    var nth = 0;
+    value = value.replace(/,/g, match => {
+      nth++;
+      return (nth === 1) ? match : '';
+    });
+
+    return value.replace(/\,/g, '.');
   }
 
 }
