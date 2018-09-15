@@ -7,10 +7,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
   form = new FormGroup({
     first: new FormControl('Nancy', [Validators.minLength(2), Validators.required]),
     last: new FormControl(null, [Validators.required]),
-    rent: new FormControl(null, [Validators.required])
+    rent: new FormControl(null, [Validators.required]),
+    income: new FormControl(239, [Validators.required])
   });
 
   onSubmit(): void {
