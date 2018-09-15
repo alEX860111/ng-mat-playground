@@ -16,7 +16,6 @@ export interface NumberInputConfig {
 @Directive({
   selector: '[numberInput]',
   providers: [NUMBER_INPUT_VALUE_ACCESSOR, DecimalPipe, NumberParser]
-
 })
 export class NumberInput implements ControlValueAccessor {
 
@@ -35,7 +34,6 @@ export class NumberInput implements ControlValueAccessor {
     return this._config;
   }
   _config: NumberInputConfig;
-
 
   constructor(
     private renderer: Renderer2,
@@ -63,7 +61,8 @@ export class NumberInput implements ControlValueAccessor {
     }
   }
 
-  @HostListener('keydown', ['$event']) onKeyDown(event) {
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event) {
     const e = <KeyboardEvent>event;
     if ([46, 8, 9, 27, 13, 110, 188].indexOf(e.keyCode) !== -1 ||
       // Allow: Ctrl+A
