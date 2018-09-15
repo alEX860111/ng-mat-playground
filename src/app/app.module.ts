@@ -13,11 +13,11 @@ import { MatToolbarModule, MatFormFieldModule, MatInputModule, MatButtonModule, 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MoneyAmountInput } from './money-amount-input.component';
 import { OnlyNumber } from './only-number';
-import { SplitterDirective } from './currency-input';
+import { NumberInput } from './number-input';
 
 @NgModule({
   declarations: [
-    AppComponent, MoneyAmountInput, OnlyNumber, SplitterDirective
+    AppComponent, MoneyAmountInput, OnlyNumber, NumberInput
   ],
   imports: [
     BrowserModule,

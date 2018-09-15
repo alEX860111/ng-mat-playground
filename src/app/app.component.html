@@ -12,13 +12,15 @@
   <mat-form-field>
     <money-amount-input formControlName="rent" placeholder="Rent" required></money-amount-input>
     <span matSuffix>€</span>
-    <mat-hint>Your monthly rent</mat-hint>
+    <!--<mat-hint>Your monthly rent</mat-hint>-->
   </mat-form-field>
   <br>
   <mat-form-field>
-    <input class="number-input" splitterControl matInput formControlName="income" placeholder="Income" required>
+    <input numberInput matInput formControlName="income" placeholder="Income" required>
     <span matSuffix>€</span>
   </mat-form-field>
   <br>
   <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
 </form>
+
+{{form.get('income').errors | json}}

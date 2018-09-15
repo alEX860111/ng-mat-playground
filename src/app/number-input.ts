@@ -1,60 +1,48 @@
 import { Directive, HostListener, Renderer2, ElementRef, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
+import { NumberParser } from './number-parser';
 
-export const SPLITTER_VALUE_ACCESSOR: any = {
+export const NUMBER_INPUT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => SplitterDirective),
+  useExisting: forwardRef(() => NumberInput),
   multi: true,
 };
 
 @Directive({
-  selector: '[splitterControl]',
-  providers: [SPLITTER_VALUE_ACCESSOR, DecimalPipe]
+  selector: '[numberInput]',
+  providers: [NUMBER_INPUT_VALUE_ACCESSOR, DecimalPipe, NumberParser]
+  
 })
-export class SplitterDirective implements ControlValueAccessor {
-  onChange;
+export class NumberInput implements ControlValueAccessor {
 
-  constructor(private renderer: Renderer2,
+  constructor(
+    private renderer: Renderer2,
     private element: ElementRef,
+    private numberParser: NumberParser,
     private decimalPipe: DecimalPipe) {
   }
+
+  @HostListener('blur', ['$event.target.value'])
+  blur(value: string) {
+    const parsedValue = this.numberParser.parseNumber(value);
+    console.log(parsedValue);
+    this.onChange(parsedValue);
+    this.onTouched();
+    if (parsedValue) {
+      this.writeValueWithMinFractionDigits(parsedValue, 2);
+    }
+  }
+
   @HostListener('input', ['$event.target.value'])
   input(value: string) {
-    value = value.replace(/[^\.\,\d]/g, '');
-    value = value.replace(/\./g, '');
-    var nth = 0;
-    value = value.replace(/,/g, match => {
-      nth++;
-      return (nth === 1) ? match : '';
-    });
-    value = value.replace(/\,/g, '.');
-
-    console.log('input', value);
-    const indexOf = value.indexOf('.');
-
-    if (indexOf === value.length - 1) {
-      this.onChange(null);
-      return;
-    }
-
-    if (indexOf === -1 && value.length > 0) {
-      const parsed = Number(value);
-      this.writeValue(parsed);
-      this.onChange(parsed);
-      return;
-    }
-
-    const matches = value.match(/(\d+\.\d{1,2})/);
-    if (matches && matches[0]) {
-      const parsedValue = Number(matches[0]);
-      console.log(parsedValue);
+    const parsedValue = this.numberParser.parseNumber(value);
+    console.log(parsedValue);
+    this.onChange(parsedValue);
+    //this.onTouched();
+    if (parsedValue) {
       this.writeValue(parsedValue);
-      this.onChange(parsedValue);
-      return;
     }
-
-    this.onChange(null);
   }
 
   @HostListener('keydown', ['$event']) onKeyDown(event) {
@@ -81,18 +69,24 @@ export class SplitterDirective implements ControlValueAccessor {
 
   writeValue(value: any): void {
     console.log('writeValue');
+    this.writeValueWithMinFractionDigits(value, 0);
+  }
+
+  private writeValueWithMinFractionDigits(value: any, minFractionDigits: number) {
     const element = this.element.nativeElement;
 
-    this.renderer.setProperty(element, 'value', this.decimalPipe.transform(value, '1.0-2', 'de'));
+    this.renderer.setProperty(element, 'value', this.decimalPipe.transform(value, `1.${minFractionDigits}-2`, 'de'));
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (amount: number) => void): void {
     this.onChange = fn;
   }
+  onChange = (_: number) => { };
+
 
   registerOnTouched(fn: any): void {
-    this._onTouched = fn;
+    this.onTouched = fn;
   }
-  _onTouched = () => { };
+  onTouched = () => { };
 
 }
