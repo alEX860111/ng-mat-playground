@@ -1,4 +1,4 @@
-import { Directive, HostListener, Renderer2, ElementRef, forwardRef } from '@angular/core';
+import { Directive, HostListener, Renderer2, ElementRef, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { NumberParser } from './number-parser';
@@ -9,12 +9,33 @@ export const NUMBER_INPUT_VALUE_ACCESSOR: any = {
   multi: true,
 };
 
+export interface NumberInputConfig {
+  maxFractionDigits: number;
+}
+
 @Directive({
   selector: '[numberInput]',
   providers: [NUMBER_INPUT_VALUE_ACCESSOR, DecimalPipe, NumberParser]
-  
+
 })
 export class NumberInput implements ControlValueAccessor {
+
+  @Input('numberInput')
+  set config(config: NumberInputConfig) {
+    if (config) {
+      this._config = config;
+    } else {
+      this._config = {
+        maxFractionDigits: 2
+      };
+    }
+
+  }
+  get config(): NumberInputConfig {
+    return this._config;
+  }
+  _config: NumberInputConfig;
+
 
   constructor(
     private renderer: Renderer2,
@@ -25,21 +46,18 @@ export class NumberInput implements ControlValueAccessor {
 
   @HostListener('blur', ['$event.target.value'])
   blur(value: string) {
-    const parsedValue = this.numberParser.parseNumber(value);
-    console.log(parsedValue);
+    const parsedValue = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
     this.onChange(parsedValue);
     this.onTouched();
     if (parsedValue) {
-      this.writeValueWithMinFractionDigits(parsedValue, 2);
+      this.writeValueWithMinFractionDigits(parsedValue, this.config.maxFractionDigits);
     }
   }
 
   @HostListener('input', ['$event.target.value'])
   input(value: string) {
-    const parsedValue = this.numberParser.parseNumber(value);
-    console.log(parsedValue);
+    const parsedValue = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
     this.onChange(parsedValue);
-    //this.onTouched();
     if (parsedValue) {
       this.writeValue(parsedValue);
     }
@@ -68,14 +86,13 @@ export class NumberInput implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    console.log('writeValue');
     this.writeValueWithMinFractionDigits(value, 0);
   }
 
   private writeValueWithMinFractionDigits(value: any, minFractionDigits: number) {
     const element = this.element.nativeElement;
 
-    this.renderer.setProperty(element, 'value', this.decimalPipe.transform(value, `1.${minFractionDigits}-2`, 'de'));
+    this.renderer.setProperty(element, 'value', this.decimalPipe.transform(value, `1.${minFractionDigits}-${this.config.maxFractionDigits}`, 'de'));
   }
 
   registerOnChange(fn: (amount: number) => void): void {

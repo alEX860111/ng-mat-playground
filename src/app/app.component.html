@@ -16,11 +16,11 @@
   </mat-form-field>
   <br>
   <mat-form-field>
-    <input numberInput matInput formControlName="income" placeholder="Income" required>
+    <input [numberInput]="{ maxFractionDigits: 2 }" matInput formControlName="income" placeholder="Income" required>
     <span matSuffix>€</span>
   </mat-form-field>
   <br>
   <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
 </form>
 
-{{form.get('income').errors | json}}
+{{form.value | json}}

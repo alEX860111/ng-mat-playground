@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class NumberParser {
 
-  public parseNumber(value: string): number {
+  public parseNumber(value: string, maxFractionDigits = 2): number {
     if (!value) {
       return null;
     }
@@ -17,8 +17,6 @@ export class NumberParser {
     });
     value = value.replace(/\,/g, '.');
 
-    console.log('input', value);
-
     if (value.endsWith('.') || value.endsWith('.0')) {
       return null;
     }
@@ -26,8 +24,7 @@ export class NumberParser {
     if (value.indexOf('.') === -1 && value.length > 0) {
       return Number(value);
     }
-
-    const matches = value.match(/(\d+\.\d{1,2})/);
+    const matches = value.match(new RegExp(`(\\d+\\.\\d{1,${maxFractionDigits}})`));
     if (matches && matches[0]) {
       return Number(matches[0]);
     }
