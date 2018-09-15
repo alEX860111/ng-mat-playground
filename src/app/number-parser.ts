@@ -8,8 +8,7 @@ export class NumberParser {
       return null;
     }
 
-    value = value.replace(/[^\.\,\d]/g, '');
-    value = value.replace(/\./g, '');
+    value = value.replace(/[^\,\d]/g, '');
     var nth = 0;
     value = value.replace(/,/g, match => {
       nth++;
