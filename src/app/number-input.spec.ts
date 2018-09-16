@@ -24,7 +24,7 @@ class TestHostComponent {
   });
 }
 
-fdescribe('NumberInput', () => {
+describe('NumberInput', () => {
 
   let component: TestHostComponent;
   let fixture: ComponentFixture<TestHostComponent>;

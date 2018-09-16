@@ -45,7 +45,7 @@ export class NumberInput implements ControlValueAccessor {
     if (parseResult) {
       this.writeValueWithMinFractionDigits(parseResult.value, this.config.maxFractionDigits);
       this.onChange(parseResult.value);
-      
+
     } else {
       this.onChange(null);
     }
@@ -65,7 +65,14 @@ export class NumberInput implements ControlValueAccessor {
 
   @HostListener('keydown', ['$event'])
   keydown(e: KeyboardEvent) {
-    if ([46, 8, 9, 27, 13, 110, 188].indexOf(e.keyCode) !== -1 ||
+    if (e.keyCode === 188) {
+      if (this.element.nativeElement.value.indexOf(',') !== -1) {
+        e.preventDefault();
+      }
+      return;
+    }
+
+    if ([46, 8, 9, 27, 13, 110].indexOf(e.keyCode) !== -1 ||
       // Allow: Ctrl+A
       (e.keyCode === 65 && (e.ctrlKey || e.metaKey)) ||
       // Allow: Ctrl+C
