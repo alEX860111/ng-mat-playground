@@ -103,7 +103,7 @@ export class NumberInput implements ControlValueAccessor {
     this.renderer.setProperty(element, 'value', transformedValue);
   }
 
-  registerOnChange(fn: (amount: number) => void): void {
+  registerOnChange(fn: (_: number) => void): void {
     this.onChange = fn;
   }
   private onChange = (_: number) => { };
