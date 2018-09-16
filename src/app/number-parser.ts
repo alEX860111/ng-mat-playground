@@ -1,25 +1,30 @@
 import { Injectable } from '@angular/core';
 
+export interface NumberParseResult {
+  value: number;
+  numFractionDigits: number;
+}
+
 @Injectable()
 export class NumberParser {
 
-  public parseNumber(value: string, maxFractionDigits = 2): number {
+  public parseNumber(value: string, maxFractionDigits = 2): NumberParseResult {
     if (!value) {
       return null;
     }
 
     value = this.sanitize(value);
 
-    if (value.endsWith('.') || value.endsWith('.0')) {
+    if (value.endsWith('.')) {
       return null;
     }
 
     if (value.indexOf('.') === -1 && value.length > 0) {
-      return Number(value);
+      return { value: Number(value), numFractionDigits: 0 };
     }
-    const matches = value.match(new RegExp(`(\\d+\\.\\d{1,${maxFractionDigits}})`));
+    const matches = value.match(new RegExp(`(\\d+\\.(\\d{1,${maxFractionDigits}}))`));
     if (matches && matches[0]) {
-      return Number(matches[0]);
+      return { value: Number(matches[1]), numFractionDigits: Number(matches[2].length) };
     }
 
     return null;

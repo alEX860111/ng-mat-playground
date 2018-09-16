@@ -44,20 +44,26 @@ export class NumberInput implements ControlValueAccessor {
 
   @HostListener('blur', ['$event.target.value'])
   blur(value: string) {
-    const parsedValue = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
-    this.onChange(parsedValue);
-    this.onTouched();
-    if (parsedValue) {
-      this.writeValueWithMinFractionDigits(parsedValue, this.config.maxFractionDigits);
+    const parseResult = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
+    if (parseResult) {
+      this.writeValueWithMinFractionDigits(parseResult.value, this.config.maxFractionDigits);
+      this.onChange(parseResult.value);
+      
+    } else {
+      this.onChange(null);
     }
+    this.onTouched();
   }
 
   @HostListener('input', ['$event.target.value'])
   input(value: string) {
-    const parsedValue = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
-    this.onChange(parsedValue);
-    if (parsedValue) {
-      this.writeValue(parsedValue);
+    const parseResult = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
+    console.log(parseResult);
+    if (parseResult) {
+      this.writeValueWithMinFractionDigits(parseResult.value, parseResult.numFractionDigits);
+      this.onChange(parseResult.value);
+    } else {
+      this.onChange(null);
     }
   }
 

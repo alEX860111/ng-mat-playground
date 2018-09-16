@@ -8,21 +8,24 @@ describe('NumberParser', () => {
     numberParser = new NumberParser();
   });
 
-  it('should parse numbers', () => {
+  it('should return null if number cannot be parsed', () => {
     expect(numberParser.parseNumber('')).toEqual(null);
     expect(numberParser.parseNumber(null)).toEqual(null);
     expect(numberParser.parseNumber(undefined)).toEqual(null);
-    expect(numberParser.parseNumber('42')).toEqual(42);
-    expect(numberParser.parseNumber('42,89')).toEqual(42.89);
-    expect(numberParser.parseNumber('42,89,')).toEqual(42.89);
-    expect(numberParser.parseNumber('42,8')).toEqual(42.8);
-    expect(numberParser.parseNumber('42,899')).toEqual(42.89);
-    expect(numberParser.parseNumber('1.000')).toEqual(1000);
-    expect(numberParser.parseNumber('1.000,89')).toEqual(1000.89);
     expect(numberParser.parseNumber('42,')).toEqual(null);
-    expect(numberParser.parseNumber('42,0')).toEqual(null);
     expect(numberParser.parseNumber('abc')).toEqual(null);
-    expect(numberParser.parseNumber('abc42')).toEqual(42);
+  });
+
+  it('should return the parse result', () => {
+    expect(numberParser.parseNumber('42')).toEqual({ value: 42, numFractionDigits: 0 });
+    expect(numberParser.parseNumber('42,89')).toEqual({ value: 42.89, numFractionDigits: 2 });
+    expect(numberParser.parseNumber('42,89,')).toEqual({ value: 42.89, numFractionDigits: 2 });
+    expect(numberParser.parseNumber('42,8')).toEqual({ value: 42.8, numFractionDigits: 1 });
+    expect(numberParser.parseNumber('42,899')).toEqual({ value: 42.89, numFractionDigits: 2 });
+    expect(numberParser.parseNumber('1.000')).toEqual({ value: 1000, numFractionDigits: 0 });
+    expect(numberParser.parseNumber('1.000,89')).toEqual({ value: 1000.89, numFractionDigits: 2 });
+    expect(numberParser.parseNumber('42,0')).toEqual({ value: 42, numFractionDigits: 1 });
+    expect(numberParser.parseNumber('abc42')).toEqual({ value: 42, numFractionDigits: 0 });
   });
 
 });
