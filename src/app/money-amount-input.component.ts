@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
   templateUrl: 'money-amount-input.component.html',
   styleUrls: ['money-amount-input.component.css'],
   providers: [
-    { provide: MatFormFieldControl, useExisting: MoneyAmountInput }
+    { provide: MatFormFieldControl, useExisting: MoneyAmountInputComponent }
   ],
   host: {
     '[class.floating]': 'shouldLabelFloat',
@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
     '[attr.aria-describedby]': 'describedBy',
   }
 })
-export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy, ControlValueAccessor {
+export class MoneyAmountInputComponent implements MatFormFieldControl<number>, OnDestroy, ControlValueAccessor {
   static nextId = 0;
 
   private static readonly DEFAULT_INTEGER_PART = null;
@@ -29,7 +29,7 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
   stateChanges = new Subject<void>();
   focused = false;
   controlType = 'money-amount-input';
-  id = `money-amount-input-${MoneyAmountInput.nextId++}`;
+  id = `money-amount-input-${MoneyAmountInputComponent.nextId++}`;
   describedBy = '';
 
   get errorState() {
@@ -77,11 +77,11 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
   }
   set value(amount: number | null) {
     if (amount !== null) {
-      const split = String(amount).split('.')
+      const split = String(amount).split('.');
       this.parts.setValue({ integerPart: split[0], fractionalPart: split[1] });
 
     } else {
-      this.parts.setValue({ integerPart: MoneyAmountInput.DEFAULT_INTEGER_PART, fractionalPart: MoneyAmountInput.DEFAULT_FRACTIONALPART });
+      this.parts.setValue({ integerPart: MoneyAmountInputComponent.DEFAULT_INTEGER_PART, fractionalPart: MoneyAmountInputComponent.DEFAULT_FRACTIONALPART });
 
     }
     this.stateChanges.next();
@@ -89,8 +89,8 @@ export class MoneyAmountInput implements MatFormFieldControl<number>, OnDestroy,
   }
 
   constructor(private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>, @Optional() @Self() public ngControl: NgControl) {
-    const integerPartControl = new FormControl(MoneyAmountInput.DEFAULT_INTEGER_PART, [Validators.pattern(/^\d+$/), Validators.required]);
-    const fractionalPartControl = new FormControl(MoneyAmountInput.DEFAULT_FRACTIONALPART, [Validators.pattern(/^\d{1,2}$/), Validators.required]);
+    const integerPartControl = new FormControl(MoneyAmountInputComponent.DEFAULT_INTEGER_PART, [Validators.pattern(/^\d+$/), Validators.required]);
+    const fractionalPartControl = new FormControl(MoneyAmountInputComponent.DEFAULT_FRACTIONALPART, [Validators.pattern(/^\d{1,2}$/), Validators.required]);
     this.parts = new FormGroup({
       integerPart: integerPartControl,
       fractionalPart: fractionalPartControl

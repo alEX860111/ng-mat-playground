@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { Component, DebugElement, LOCALE_ID } from '@angular/core';
-import { NumberInput } from './number-input';
+import { NumberInputDirective } from './number-input';
 import { By } from '@angular/platform-browser';
 
 import { registerLocaleData } from '@angular/common';
@@ -33,7 +33,7 @@ describe('NumberInput', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
-      declarations: [NumberInput, TestHostComponent],
+      declarations: [NumberInputDirective, TestHostComponent],
       providers: [{ provide: LOCALE_ID, useValue: 'de' }]
     });
     fixture = TestBed.createComponent(TestHostComponent);

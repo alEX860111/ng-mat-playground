@@ -29,7 +29,7 @@ export class NumberParser {
   private sanitize(value: string): string {
     value = value.replace(/[^\,\d]/g, '');
 
-    var nth = 0;
+    let nth = 0;
     value = value.replace(/,/g, match => {
       nth++;
       return (nth === 1) ? match : '';

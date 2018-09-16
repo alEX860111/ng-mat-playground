@@ -11,13 +11,13 @@ import { AppComponent } from './app.component';
 import { MatToolbarModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule } from '@angular/material';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { MoneyAmountInput } from './money-amount-input.component';
-import { OnlyNumber } from './only-number';
-import { NumberInput } from './number-input';
+import { MoneyAmountInputComponent } from './money-amount-input.component';
+import { OnlyNumberDirective } from './only-number';
+import { NumberInputDirective } from './number-input';
 
 @NgModule({
   declarations: [
-    AppComponent, MoneyAmountInput, OnlyNumber, NumberInput
+    AppComponent, MoneyAmountInputComponent, OnlyNumberDirective, NumberInputDirective
   ],
   imports: [
     BrowserModule,

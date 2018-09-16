@@ -3,7 +3,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 @Directive({
   selector: '[OnlyNumber]'
 })
-export class OnlyNumber {
+export class OnlyNumberDirective {
 
   @Input()
   OnlyNumber: boolean;

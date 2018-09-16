@@ -6,7 +6,7 @@ import { NumberInputConfig } from './number-input-config';
 
 export const NUMBER_INPUT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => NumberInput),
+  useExisting: forwardRef(() => NumberInputDirective),
   multi: true,
 };
 
@@ -14,7 +14,7 @@ export const NUMBER_INPUT_VALUE_ACCESSOR: any = {
   selector: '[numberInput]',
   providers: [NUMBER_INPUT_VALUE_ACCESSOR, DecimalPipe, NumberParser]
 })
-export class NumberInput implements ControlValueAccessor {
+export class NumberInputDirective implements ControlValueAccessor {
 
   @Input('numberInput')
   set config(config: NumberInputConfig) {
