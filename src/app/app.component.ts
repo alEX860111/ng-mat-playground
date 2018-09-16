@@ -12,7 +12,7 @@ export class AppComponent {
     first: new FormControl(null, [Validators.required]),
     last: new FormControl(null, [Validators.required]),
     rent: new FormControl(null, [Validators.required]),
-    income: new FormControl(123.2, [Validators.required])
+    income: new FormControl(null, [Validators.required])
   });
 
   onSubmit(): void {
