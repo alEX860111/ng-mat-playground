@@ -2,16 +2,13 @@ import { Directive, HostListener, Renderer2, ElementRef, forwardRef, Input } fro
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { NumberParser } from './number-parser';
+import { NumberInputConfig } from './number-input-config';
 
 export const NUMBER_INPUT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => NumberInput),
   multi: true,
 };
-
-export interface NumberInputConfig {
-  maxFractionDigits: number;
-}
 
 @Directive({
   selector: '[numberInput]',

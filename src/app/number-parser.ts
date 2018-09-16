@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export interface NumberParseResult {
-  value: number;
-  numFractionDigits: number;
-}
+import { NumberParseResult } from './number-parse-result';
 
 @Injectable()
 export class NumberParser {
