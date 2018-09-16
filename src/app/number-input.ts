@@ -58,7 +58,6 @@ export class NumberInput implements ControlValueAccessor {
   @HostListener('input', ['$event.target.value'])
   input(value: string) {
     const parseResult = this.numberParser.parseNumber(value, this.config.maxFractionDigits);
-    console.log(parseResult);
     if (parseResult) {
       this.writeValueWithMinFractionDigits(parseResult.value, parseResult.numFractionDigits);
       this.onChange(parseResult.value);
