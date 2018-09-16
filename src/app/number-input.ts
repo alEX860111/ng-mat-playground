@@ -30,7 +30,7 @@ export class NumberInput implements ControlValueAccessor {
   get config(): NumberInputConfig {
     return this._config;
   }
-  _config: NumberInputConfig;
+  private _config: NumberInputConfig;
 
   constructor(
     private renderer: Renderer2,
@@ -64,8 +64,7 @@ export class NumberInput implements ControlValueAccessor {
   }
 
   @HostListener('keydown', ['$event'])
-  onKeyDown(event) {
-    const e = <KeyboardEvent>event;
+  keydown(e: KeyboardEvent) {
     if ([46, 8, 9, 27, 13, 110, 188].indexOf(e.keyCode) !== -1 ||
       // Allow: Ctrl+A
       (e.keyCode === 65 && (e.ctrlKey || e.metaKey)) ||
@@ -100,12 +99,12 @@ export class NumberInput implements ControlValueAccessor {
   registerOnChange(fn: (amount: number) => void): void {
     this.onChange = fn;
   }
-  onChange = (_: number) => { };
+  private onChange = (_: number) => { };
 
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  onTouched = () => { };
+  private onTouched = () => { };
 
 }
