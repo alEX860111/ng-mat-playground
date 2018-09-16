@@ -90,13 +90,14 @@ export class NumberInput implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    this.writeValueWithMinFractionDigits(value, 0);
+    this.writeValueWithMinFractionDigits(value, this.config.maxFractionDigits);
   }
 
   private writeValueWithMinFractionDigits(value: any, minFractionDigits: number) {
     const element = this.element.nativeElement;
-
-    this.renderer.setProperty(element, 'value', this.decimalPipe.transform(value, `1.${minFractionDigits}-${this.config.maxFractionDigits}`, 'de'));
+    const digitsInfo = `1.${minFractionDigits}-${this.config.maxFractionDigits}`;
+    const transformedValue = this.decimalPipe.transform(value, digitsInfo, 'de');
+    this.renderer.setProperty(element, 'value', transformedValue);
   }
 
   registerOnChange(fn: (amount: number) => void): void {
