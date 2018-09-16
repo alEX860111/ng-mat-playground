@@ -65,31 +65,25 @@ export class NumberInputDirective implements ControlValueAccessor {
 
   @HostListener('keydown', ['$event'])
   keydown(e: KeyboardEvent) {
-    if (e.keyCode === 188) {
-      if (this.element.nativeElement.value.indexOf(',') !== -1) {
+    if (e.key === ',') {
+      if (this.element.nativeElement.value.indexOf(',') !== -1 || !this.element.nativeElement.value) {
         e.preventDefault();
       }
       return;
     }
 
-    if ([46, 8, 9, 27, 13, 110].indexOf(e.keyCode) !== -1 ||
-      // Allow: Ctrl+A
-      (e.keyCode === 65 && (e.ctrlKey || e.metaKey)) ||
-      // Allow: Ctrl+C
-      (e.keyCode === 67 && (e.ctrlKey || e.metaKey)) ||
-      // Allow: Ctrl+V
-      (e.keyCode === 86 && (e.ctrlKey || e.metaKey)) ||
-      // Allow: Ctrl+X
-      (e.keyCode === 88 && (e.ctrlKey || e.metaKey)) ||
-      // Allow: home, end, left, right
-      (e.keyCode >= 35 && e.keyCode <= 39)) {
-      // let it happen, don't do anything
+    if ([
+      'ArrowLeft', 'ArrowRight', 'Backspace', 'Tab', 'Delete', 'Home', 'End', 'Enter',
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    ].includes(e.key)) {
       return;
     }
-    // Ensure that it is a number and stop the keypress
-    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-      e.preventDefault();
+
+    if (['a', 'c', 'v', 'x'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
+      return;
     }
+
+    e.preventDefault();
   }
 
   writeValue(value: any): void {

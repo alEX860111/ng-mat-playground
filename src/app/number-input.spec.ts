@@ -94,15 +94,24 @@ describe('NumberInput', () => {
     });
 
     it('and accept comma', () => {
-      event.keyCode = 188;
+      event.key = ',';
+      inputEl.nativeElement.value = '99';
       inputEl.triggerEventHandler('keydown', event);
 
       expect(event.preventDefault).not.toHaveBeenCalled();
     });
 
-    it('and not accept comma', () => {
-      event.keyCode = 188;
+    it('and not accept comma if comma is already present', () => {
+      event.key = ',';
       inputEl.nativeElement.value = '99,';
+      inputEl.triggerEventHandler('keydown', event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('and not accept comma if value is empty', () => {
+      event.key = ',';
+      inputEl.nativeElement.value = '';
       inputEl.triggerEventHandler('keydown', event);
 
       expect(event.preventDefault).toHaveBeenCalled();
