@@ -42,8 +42,9 @@ describe('NumberInput', () => {
     fixture.detectChanges();
   });
 
-  describe('input event', () => {
-    it('should be handled with valid number', () => {
+  describe('should handle input event', () => {
+
+    it('with valid number', () => {
       inputEl.triggerEventHandler('input', { target: { value: '1000,1' } });
       fixture.detectChanges();
 
@@ -51,17 +52,19 @@ describe('NumberInput', () => {
       expect(component.form.get('income').value).toEqual(1000.1);
     });
 
-    it('should be handled with invalid number', () => {
+    it('with invalid number', () => {
       inputEl.triggerEventHandler('input', { target: { value: 'abc' } });
       fixture.detectChanges();
 
       expect(inputEl.nativeElement.value).toEqual('');
       expect(component.form.get('income').value).toBeNull();
     });
+
   });
 
-  describe('blur event', () => {
-    it('should be handled with valid number', () => {
+  describe('should handle blur event', () => {
+
+    it('with valid number', () => {
       inputEl.triggerEventHandler('blur', { target: { value: '1000,1' } });
       fixture.detectChanges();
 
@@ -69,13 +72,42 @@ describe('NumberInput', () => {
       expect(component.form.get('income').value).toEqual(1000.1);
     });
 
-    it('should be handled with invalid number', () => {
+    it('with invalid number', () => {
       inputEl.triggerEventHandler('blur', { target: { value: 'abc' } });
       fixture.detectChanges();
 
       expect(inputEl.nativeElement.value).toEqual('');
       expect(component.form.get('income').value).toBeNull();
     });
+
+  });
+
+  describe('should handle keydown event', () => {
+
+    let event;
+
+    beforeEach(() => {
+      event = {
+        preventDefault: () => { }
+      };
+      spyOn(event, 'preventDefault');
+    });
+
+    it('and accept comma', () => {
+      event.keyCode = 188;
+      inputEl.triggerEventHandler('keydown', event);
+
+      expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('and not accept comma', () => {
+      event.keyCode = 188;
+      inputEl.nativeElement.value = '99,';
+      inputEl.triggerEventHandler('keydown', event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
   });
 
 });
